@@ -50,11 +50,14 @@ class CypressController
 
         $user->load($request->input('load', []));
 
-        return tap($user, function ($user) {
-            auth()->login($user);
-
-            $user->setHidden([])->setVisible([]);
-        });
+        // Login the user
+        auth()->login($user);
+    
+        // Make all attributes visible and not hidden
+        $user->setHidden([])->setVisible([]);
+    
+        // Return as an array instead of an object to prevent JSON serialization issues
+        return response()->json($user->toArray());
     }
 
     public function currentUser()
